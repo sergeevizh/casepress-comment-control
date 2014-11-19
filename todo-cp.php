@@ -1,10 +1,56 @@
 <?php
 /*
-Plugin Name: ToDo-CP
+Plugin Name: CasePress. ToDo
 */        
 
+function add_todo_test_cp(){
+ob_start();
+?>
+<ol class='example'>
+  <li>First<ol></ol></li>
+  <li>Second
+    <ol>
+      <li>First</li>
+      <li>Second</li>
+      <li>Third</li>
+    </ol>
+  </li>
+  <li>Third
+      <ol>
+      <li>First</li>
+      <li>Second</li>
+      <li>Third</li>        
+      </ol>
+   </li>
+</ol>
+<script>
 
-add_action('cp_entry_content_after', 'add_todo_to_case_page');
+    jQuery(function($){
+  $("ol.example").sortable();
+})
+        
+</script>
+
+<?php
+return ob_get_clean();
+}
+add_shortcode('todo_test', 'add_todo_test_cp');
+
+
+
+add_action('wp_enqueue_scripts', 'load_ss');
+function load_ss(){
+    global $post;
+    if( has_shortcode( $post->post_content, 'todo_test') or is_singular('cases') ) {
+            wp_enqueue_style( 'todo', plugin_dir_url(__FILE__).'/todo.css' );
+            wp_enqueue_script( 'nestable', plugin_dir_url(__FILE__).'/jquery.nestable.js' );
+            wp_enqueue_script( 'jquery-sortable', plugin_dir_url(__FILE__).'/jquery-sortable-min.js' );
+
+    }
+}
+
+
+//add_action('cp_entry_content_after', 'add_todo_to_case_page');
 
 function add_todo_to_case_page(){
 global $post;
@@ -415,19 +461,9 @@ function todo_gen() {
 <?php
 }
 
-add_action('wp_enqueue_scripts', 'load_ss');
-function load_ss(){
-    global $post;
-    if( has_shortcode( $post->post_content, 'todo') or is_singular('cases') ) {
-            wp_enqueue_style( 'todo', plugin_dir_url(__FILE__).'/todo-cp.css' );
-            wp_enqueue_script( 'nestable', plugin_dir_url(__FILE__).'/jquery.nestable.js' );
-            wp_enqueue_script( 'jquery_contenteditable', plugin_dir_url(__FILE__).'/jquery.contenteditable.js' );
-
-    }
-}
 
 // Hook into the 'init' action
-add_action( 'init', 'create_notes_post_type', 0 );
+//add_action( 'init', 'create_notes_post_type', 0 );
 // Register Custom Post Type
 function create_notes_post_type() {
 
