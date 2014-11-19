@@ -1,14 +1,22 @@
 todo-cp
 =======
 
+# Changelog
 
-##Todo
-- Удалить текущий код.
-- Переписать вывод секции на шорткод [todo_cp]
+## 20141120
+- Заменен компонент на https://github.com/johnny/jquery-sortable
+- Старый код перетащил в todo-old.php - для истории, потом нужно удалить
+- Шорткод обозначен как [todo_comments] - чтобы добавлять в чек лист комменты
+
+# Todo
+## Ближайшие
+- Можно при добавлении комментария отметить галочку "На контроль"
+- Если галочка стоит, то добавлять мету control_cp = yes
+- Если есть мета control_cp = yes, то выводить такие комментарии списком через шорткод [todo_comments]
+- Можно менять порядок исполнения перетаскиванием, порядок хранится в мете order_control_cp
+- По умолчанию все записи добавляются в конец (мета order_control_cp = 0)
+- У элемента можно поставить галочку и тем самым зафиксировать его исполнение
+
+## Долгосрочные
 - Сделать вывод шорткода через хук the_content
-- Всю логику реализовать через скрипт https://github.com/mar10/fancytree
 - Хранение элементов дерева как комментарии типа cp_todo
-- Включить стиль http://wwwendt.de/tech/fancytree/demo/sample-ext-bootstrap.html
-- Включить DnD. Пример http://wwwendt.de/tech/fancytree/demo/sample-ext-dnd.html
-- Включить чек боксы http://wwwendt.de/tech/fancytree/demo/sample-select.html
-- Включить редактирование http://wwwendt.de/tech/fancytree/demo/sample-ext-edit.html
