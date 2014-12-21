@@ -5,91 +5,98 @@ Plugin Name: CasePress. ToDo
 define('WP_DEBUG', true);
 function add_todo_test_cp(){
     ob_start();
+
     $args = array(
-        'orderby' => 'cp_control_order', //мета для порядка вывода коментариев
+        'meta_query' => array(
+            array(
+                'key' => 'cp_control',
+                'value' => 'yes',
+            ),
+        ),
+        'meta_key' => 'cp_control_order',
+        'orderby' => 'meta_value_num',
         'order' => 'ASC',
-        'meta_key' => 'cp_control',
-        'meta_value' => 'yes',
     );
-    if( $comments = get_comments( $args ) ){?>
-        <ul class="list-group" id="todo-comments">
+
+    $comments_query = new WP_Comment_Query;
+    $comments       = $comments_query->query( $args );?>
+    <ul class="list-group" id="todo-comments">
         <?php foreach($comments as $comment){
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
             $com_ID = $comment->comment_ID;?>
-               <li class="list-group-item" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
-                   <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
-                   <?php echo $comment->comment_content;?>
-                   <br><input type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item" value="Удалить">
-               </li>
-       <?php
+            <li class="list-group-item" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
+                <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
+                <?php echo $comment->comment_content;?>
+                <br><input type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item" value="Удалить">
+            </li>
+        <?php
         }
-    }
-    ?>
-        </ul>
-<script>
-    //отправка ajax`ом порядка вывода коментов
-    jQuery  (document). ready ( function () {
-        var group = jQuery("ul#todo-comments") . sortable({
-            onDrop: function (item, container, _super) {
+        ?>
+    </ul>
+    <script>
+        //отправка ajax`ом порядка вывода коментов
+        jQuery  (document). ready ( function () {
+            var group = jQuery("ul#todo-comments") . sortable({
+                onDrop: function (item, container, _super) {
 
-                var serialize_data = group . sortable("serialize") . get();
-                console . log(serialize_data);
-                _super(item, container)
+                    var serialize_data = group . sortable("serialize") . get();
+                    console . log(serialize_data);
+                    _super(item, container)
 
-                var data = {
-                    serialize_data: serialize_data,
-                    action: 'cp_control_order_change'
-                };
-                jQuery.post(ajaxurl, data, function(response) {
-                    if (response . type == "success") {
-                        console . log (response . post)
-                    } else {
-                        alert("Ошибка")
-                    }
-                });
+                    var data = {
+                        serialize_data: serialize_data,
+                        action: 'cp_control_order_change'
+                    };
+                    jQuery.post(ajaxurl, data, function(response) {
+                        if (response . type == "success") {
+                            console . log (response)
+                        } else {
+                            alert("Ошибка")
+                        }
+                    });
 
-            }
+                }
+            })
         })
-    })
 
-    var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-    //изменение меты cp_control_done, отправка данных ajax
-    jQuery(document) . ready(function () {
-        jQuery(".lock_comment") . change(function () {
-            comment_id = jQuery(this) . attr("data-comment_id")
+        var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+        //изменение меты cp_control_done, отправка данных ajax
+        jQuery(document) . ready(function () {
+            jQuery(".lock_comment") . change(function () {
+                comment_id = jQuery(this) . attr("data-comment_id")
                 var data = {
                     comment_id: comment_id,
                     action: 'cp_change'
                 };
-        jQuery.post(ajaxurl, data, function(response) {
-            if (response . type == "success") {
-                    // alert("все прошло хоррошо")
-                } else {
-                    alert("Ошибка сохранения результата")
-                }
+                jQuery.post(ajaxurl, data, function(response) {
+                    if (response . type == "success") {
+                        // alert("все прошло хоррошо")
+                    } else {
+                        alert("Ошибка сохранения результата")
+                    }
+                });
             });
-        });
-    })
-    //удаление меты cp_control, запрос ajax
-    jQuery(document) . ready( function() {
-        jQuery(".delete_li_item") . click( function() {
-            comment_id = jQuery(this) . attr("data-comment_id")
+        })
+        //удаление меты cp_control, запрос ajax
+        jQuery(document) . ready( function() {
+            jQuery(".delete_li_item") . click( function() {
+                comment_id = jQuery(this) . attr("data-comment_id")
                 var data = {
                     comment_id: comment_id,
                     action: 'cp_delete'
                 };
-        jQuery.post(ajaxurl, data, function(response) {
-            if (response . type == "success") {
-                    jQuery("#control_comment_id_"+comment_id). remove()
-                } else {
-                    alert("Ошибка удаления")
-                }
+                jQuery.post(ajaxurl, data, function(response) {
+                    if (response . type == "success") {
+                        jQuery("#control_comment_id_"+comment_id). remove()
+                    } else {
+                        alert("Ошибка удаления")
+                    }
+                });
             });
-        });
-    })
-</script>
-<?php
-return ob_get_clean();
+        })
+    </script>
+    <?php
+    return ob_get_clean();
 }
 //добавляем шорткод
 add_shortcode('todo_comments', 'add_todo_test_cp');
@@ -106,7 +113,7 @@ function load_jquery_sortable()
 //добавляет чекбокс к форме комментария
 add_action('comment_form', 'cp_control_checkbox');
 function cp_control_checkbox() {
-   ?>
+    ?>
     <p>На контроль
         <input type="hidden" name="check" value="no">
         <input type="checkbox" name="check" value="yes">
@@ -118,7 +125,7 @@ function cp_control_checkbox() {
 add_action('comment_post','cp_control_check');
 function cp_control_check($comment_id){
     add_comment_meta($comment_id, 'cp_control_order', $comment_id); // мета поле для сортировки вывода коментов
-       if ($_POST['check'] == 'yes'){
+    if ($_POST['check'] == 'yes'){
         add_comment_meta ($comment_id, 'cp_control' ,'yes' ); // если стоит checkbox "На контроль" - мета поле, используемое для вывода коментов в шорткоде
     }
 }
@@ -134,33 +141,20 @@ function display_if_cp_control_yes ($comment_id){
     }
 }*/
 
-
+//обработчик ajax изменения порядка
 add_action("wp_ajax_cp_control_order_change", "cp_control_order_change");
 add_action("wp_ajax_nopriv_cp_control_order_change", "cp_control_order_change");
 function cp_control_order_change(){
-    $args = array(
-        'orderby' => 'cp_control_order', //мета для порядка вывода коментариев
-        'order' => 'ASC',
-        'meta_key' => 'cp_control',
-        'meta_value' => 'yes',
-    );
-    $comments = get_comments( $args ); //получаем старый порядок
-    foreach($comments as $comment) {
-        $order_old[] = get_comment_meta($comment->comment_ID, "cp_control_order", true);
-    }
-    print_r($order_old);
     $order = $_POST['serialize_data'];
-    foreach ($order as $first){
-        foreach ($first as $second){
-            foreach ($second as $key => $val){
-               $order_new[] = $val;
-            }
+    $i = 0;
+    foreach ($order[0] as $val){ //изза входящего массива данных
+        foreach ($val as $value){
+            update_comment_meta($value, "cp_control_order", $i);
+            $i++;
         }
     }
-    print_r($order_new);
     $result['type'] = "success";
     wp_send_json($result);
-    die();
 }
 
 
@@ -176,8 +170,8 @@ function cp_control_change()
     }*/
     $cp_control_done = get_comment_meta($_REQUEST["comment_id"], "cp_control_done", true);
 //если мета cp_control_done не объявлена создать не заблокированную
-      if($cp_control_done === 'unlock') {
-    $cp_control_done = 'lock'; // смена типа
+    if($cp_control_done === 'unlock') {
+        $cp_control_done = 'lock'; // смена типа
     }
     elseif($cp_control_done === 'lock'){
         $cp_control_done = 'unlock'; // смена типа
@@ -186,13 +180,12 @@ function cp_control_change()
         $cp_control_done = 'lock'; // в первый раз
     }
     $res = update_comment_meta($_REQUEST["comment_id"], "cp_control_done", $cp_control_done);
-     if ($res === false) {
+    if ($res === false) {
         $result['type'] = "error";
     } else {
         $result['type'] = "success";
     }
     wp_send_json($result);
-    die();
 }
 //обработчик для неавторизированных юзеров
 function my_must_login()
@@ -212,5 +205,4 @@ function my_cp_delete(){
         $result['comment_id'] = $_REQUEST["comment_id"];
     }
     wp_send_json($result);
-    die();
 }
