@@ -2,7 +2,7 @@
 /*
 Plugin Name: CasePress. ToDo
 */
-define('WP_DEBUG', true);
+//define('WP_DEBUG', true);
 function add_todo_test_cp(){
     ob_start();
 
@@ -17,17 +17,30 @@ function add_todo_test_cp(){
         'orderby' => 'meta_value_num',
         'order' => 'ASC',
     );
-
     $comments_query = new WP_Comment_Query;
     $comments       = $comments_query->query( $args );?>
-    <ul class="list-group" id="todo-comments">
+    <ul class="" id="todo-comments">
         <?php foreach($comments as $comment){
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
             $com_ID = $comment->comment_ID;?>
-            <li class="list-group-item" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
-                <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
-                <?php echo $comment->comment_content;?>
-                <br><input type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item" value="Удалить">
+            <li class="" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
+                        </div>
+                        <div class="col-md-10">
+                            <?php echo $comment->comment_content;?>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="hide_hover">
+                                <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
         <?php
         }
@@ -37,10 +50,14 @@ function add_todo_test_cp(){
         //отправка ajax`ом порядка вывода коментов
         jQuery  (document). ready ( function () {
             var group = jQuery("ul#todo-comments") . sortable({
+                placeholder: '<li class="placeholder"></li>',
                 onDrop: function (item, container, _super) {
 
+                    item.removeClass("dragged").removeAttr("style")
+                    jQuery("body").removeClass("dragging")
+
                     var serialize_data = group . sortable("serialize") . get();
-                    console . log(serialize_data);
+                    //console . log(serialize_data);
                     _super(item, container)
 
                     var data = {
@@ -49,7 +66,7 @@ function add_todo_test_cp(){
                     };
                     jQuery.post(ajaxurl, data, function(response) {
                         if (response . type == "success") {
-                            console . log (response)
+                            //  console . log (response)
                         } else {
                             alert("Ошибка")
                         }
@@ -58,7 +75,6 @@ function add_todo_test_cp(){
                 }
             })
         })
-
         var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
         //изменение меты cp_control_done, отправка данных ajax
         jQuery(document) . ready(function () {
@@ -114,9 +130,8 @@ function load_jquery_sortable()
 add_action('comment_form', 'cp_control_checkbox');
 function cp_control_checkbox() {
     ?>
-    <p>На контроль
-        <input type="hidden" name="check" value="no">
-        <input type="checkbox" name="check" value="yes">
+    <p> <input type="hidden" name="check" value="no">
+        <label for="check_for"><input type="checkbox" name="check" value="yes" id="check_for"> На контроль</label>
     </p
     <?php;
 
@@ -129,18 +144,6 @@ function cp_control_check($comment_id){
         add_comment_meta ($comment_id, 'cp_control' ,'yes' ); // если стоит checkbox "На контроль" - мета поле, используемое для вывода коментов в шорткоде
     }
 }
-// показывает в теле коммента <br>cp_control = yes если стоит галочка
-/*add_filter( 'get_comment_text', 'display_if_cp_control_yes' );
-function display_if_cp_control_yes ($comment_id){
-    $cp_control = get_comment_meta( get_comment_ID(), 'cp_control', true );
-    if ($cp_control == 'yes'){
-        return $comment_id . '<br>cp_control = yes';
-    }
-    else {
-        return $comment_id;
-    }
-}*/
-
 //обработчик ajax изменения порядка
 add_action("wp_ajax_cp_control_order_change", "cp_control_order_change");
 add_action("wp_ajax_nopriv_cp_control_order_change", "cp_control_order_change");
@@ -156,8 +159,6 @@ function cp_control_order_change(){
     $result['type'] = "success";
     wp_send_json($result);
 }
-
-
 //обработчик ajax запроса
 add_action("wp_ajax_cp_change", "cp_control_change");
 add_action("wp_ajax_nopriv_cp_change", "cp_control_change");

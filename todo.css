@@ -8,11 +8,43 @@ body.dragging, body.dragging * {
   z-index: 2000;
 }
 
-ol.example li.placeholder {
+ul.list-group li.placeholder {
   position: relative;
   /** More li styles **/
 }
-ol.example li.placeholder:before {
+ul.list-group li.placeholder:before {
   position: absolute;
   /** Define arrowhead **/
+}
+
+.hide_hover{
+  display:none;
+}
+
+.panel:hover .hide_hover{
+  display:block;
+}
+
+#todo-comments li {
+  list-style-type: none;
+}
+
+#todo-comments li.placeholder {
+  border: medium none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+#todo-comments li.placeholder:before{
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  left: -5px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: red;
+  border-right: none;
 }
