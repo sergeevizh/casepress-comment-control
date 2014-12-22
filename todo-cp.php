@@ -1,12 +1,16 @@
 <?php
 /*
-Plugin Name: CasePress. ToDo
+Plugin Name: CasePress. ToDo Comments
+
 */
 //define('WP_DEBUG', true);
 function add_todo_test_cp(){
+global $post;
+    
     ob_start();
 
     $args = array(
+        'post_id'           => $post->ID,
         'meta_query' => array(
             array(
                 'key' => 'cp_control',
