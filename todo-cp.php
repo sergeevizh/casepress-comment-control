@@ -10,7 +10,7 @@ global $post;
     ob_start();
 
     $args = array(
-        'post_id'           => $post->ID,
+        'post_id' => $post->ID,
         'meta_query' => array(
             array(
                 'key' => 'cp_control',
@@ -51,19 +51,15 @@ global $post;
         ?>
     </ul>
     <script>
+        var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
         //отправка ajax`ом порядка вывода коментов
         jQuery  (document). ready ( function () {
             var group = jQuery("ul#todo-comments") . sortable({
                 placeholder: '<li class="placeholder"></li>',
                 onDrop: function (item, container, _super) {
-
-                    item.removeClass("dragged").removeAttr("style")
-                    jQuery("body").removeClass("dragging")
-
                     var serialize_data = group . sortable("serialize") . get();
                     //console . log(serialize_data);
                     _super(item, container)
-
                     var data = {
                         serialize_data: serialize_data,
                         action: 'cp_control_order_change'
@@ -72,14 +68,13 @@ global $post;
                         if (response . type == "success") {
                             //  console . log (response)
                         } else {
-                            alert("Ошибка")
+                            console . log("Ошибка")
                         }
                     });
 
                 }
             })
         })
-        var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
         //изменение меты cp_control_done, отправка данных ajax
         jQuery(document) . ready(function () {
             jQuery(".lock_comment") . change(function () {
@@ -92,7 +87,7 @@ global $post;
                     if (response . type == "success") {
                         // alert("все прошло хоррошо")
                     } else {
-                        alert("Ошибка сохранения результата")
+                        console . log("Ошибка сохранения результата")
                     }
                 });
             });
@@ -109,7 +104,7 @@ global $post;
                     if (response . type == "success") {
                         jQuery("#control_comment_id_"+comment_id). remove()
                     } else {
-                        alert("Ошибка удаления")
+                        console . log("Ошибка удаления")
                     }
                 });
             });
@@ -136,7 +131,7 @@ function cp_control_checkbox() {
     ?>
     <p> <input type="hidden" name="check" value="no">
         <label for="check_for"><input type="checkbox" name="check" value="yes" id="check_for"> На контроль</label>
-    </p
+    </p>
     <?php;
 
 }
