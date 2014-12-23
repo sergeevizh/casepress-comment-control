@@ -48,3 +48,12 @@ ul.list-group li.placeholder:before {
   border-left-color: red;
   border-right: none;
 }
+
+#todo-comments .panel-body{
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#todo-comments .panel{
+  margin-bottom: 5px;
+}

@@ -28,19 +28,21 @@ global $post;
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
             $com_ID = $comment->comment_ID;?>
             <li class="" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
-                <div class="panel">
-                    <div class="row">
-                        <div class="col-md-1">
-                            <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
-                        </div>
-                        <div class="col-md-10">
-                            <?php echo $comment->comment_content;?>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="hide_hover">
-                                <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
+                            </div>
+                            <div class="col-md-10">
+                                <?php echo $comment->comment_content;?>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="hide_hover">
+                                    <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
