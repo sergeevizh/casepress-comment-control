@@ -33,19 +33,24 @@ global $post;
                             <div class="col-md-1">
                                 <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-9">
                                 <?php echo $comment->comment_content;?>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <div class="hide_hover">
                                     <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button>
+                                    <a class="comment-edit-link" href="<?php echo get_edit_comment_link( $comment->comment_ID );?>">
+                                        <button type="button" class="btn btn-default btn-xs">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                    </a>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </div><!--end col-md-2-->
+                        </div><!--end row-->
+                    </div><!--end panel-body-->
+                </div><!--end panel panel-default-->
             </li>
         <?php
         }
