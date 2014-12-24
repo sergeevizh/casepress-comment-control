@@ -3,7 +3,6 @@
 Plugin Name: CasePress. ToDo Comments
 
 */
-//define('WP_DEBUG', true);
 function add_todo_test_cp(){
 global $post;
     
@@ -27,7 +26,7 @@ global $post;
         <?php foreach($comments as $comment){
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
             $com_ID = $comment->comment_ID;?>
-            <li class="" data-comment_id="<?php echo $com_ID?>" id="control_comment_id_<?php echo $com_ID?>">
+            <li class="" data-comment_id="<?php echo $com_ID?>" id="controlcommentid_<?php echo $com_ID?>">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
@@ -55,58 +54,57 @@ global $post;
     <script>
         var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
         //отправка ajax`ом порядка вывода коментов
-        jQuery  (document). ready ( function () {
-            var group = jQuery("ul#todo-comments") . sortable({
-                placeholder: '<li class="placeholder"></li>',
+        jQuery(document).ready(function(){
+            var group = jQuery("ul#todo-comments").sortable({
+                placeholder: '<li class="placeholder" />',
                 onDrop: function (item, container, _super) {
-                    var serialize_data = group . sortable("serialize") . get();
-                    //console . log(serialize_data);
-                    _super(item, container)
+                    var serialize_data = group.sortable("serialize").get();
+                    console.log(serialize_data);
                     var data = {
                         serialize_data: serialize_data,
                         action: 'cp_control_order_change'
                     };
                     jQuery.post(ajaxurl, data, function(response) {
-                        if (response . type == "success") {
-                            //  console . log (response)
+                        if (response.type == "success") {
+                            console.log (response)
                         } else {
-                            console . log("Ошибка")
+                            console.log("Ошибка")
                         }
                     });
-
+                    _super(item, container)
                 }
             })
         })
         //изменение меты cp_control_done, отправка данных ajax
-        jQuery(document) . ready(function () {
-            jQuery(".lock_comment") . change(function () {
+        jQuery(document).ready(function () {
+            jQuery(".lock_comment").change(function () {
                 comment_id = jQuery(this) . attr("data-comment_id")
                 var data = {
                     comment_id: comment_id,
                     action: 'cp_change'
                 };
                 jQuery.post(ajaxurl, data, function(response) {
-                    if (response . type == "success") {
-                        // alert("все прошло хоррошо")
+                    if (response.type == "success") {
+                        // console.log("все прошло хоррошо")
                     } else {
-                        console . log("Ошибка сохранения результата")
+                        console.log("Ошибка сохранения результата")
                     }
                 });
             });
         })
         //удаление меты cp_control, запрос ajax
-        jQuery(document) . ready( function() {
-            jQuery(".delete_li_item") . click( function() {
-                comment_id = jQuery(this) . attr("data-comment_id")
+        jQuery(document).ready( function() {
+            jQuery(".delete_li_item").click( function() {
+                comment_id = jQuery(this).attr("data-comment_id")
                 var data = {
                     comment_id: comment_id,
                     action: 'cp_delete'
                 };
                 jQuery.post(ajaxurl, data, function(response) {
-                    if (response . type == "success") {
-                        jQuery("#control_comment_id_"+comment_id). remove()
+                    if (response.type == "success") {
+                        jQuery("#controlcommentid_"+comment_id).remove()
                     } else {
-                        console . log("Ошибка удаления")
+                        console.log("Ошибка удаления")
                     }
                 });
             });
