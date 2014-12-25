@@ -5,9 +5,7 @@ Plugin Name: CasePress. ToDo Comments
 */
 function add_todo_test_cp(){
 global $post;
-    
     ob_start();
-
     $args = array(
         'post_id' => $post->ID,
         'meta_query' => array(
@@ -22,16 +20,19 @@ global $post;
     );
     $comments_query = new WP_Comment_Query;
     $comments       = $comments_query->query( $args );?>
-    <ul class="" id="todo-comments">
+    <ul class="todo-comments" id="todo-comments">
         <?php foreach($comments as $comment){
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
             $com_ID = $comment->comment_ID;?>
-            <li class="" data-comment_id="<?php echo $com_ID?>" id="controlcommentid_<?php echo $com_ID?>">
+            <li class="todo-comments-li" data-comment_id="<?php echo $com_ID?>" id="controlcommentid_<?php echo $com_ID?>">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-1">
                                 <input type="checkbox" data-comment_id="<?php echo $com_ID?>" class="lock_comment" name="lock" <?php if ($cp_control_done == 'lock') echo 'checked';?>>
+                                <div class="icon-move">
+                                    <span class="glyphicon glyphicon-sort"></span>
+                                </div>
                             </div>
                             <div class="col-md-9">
                                 <?php echo $comment->comment_content;?>
@@ -62,6 +63,7 @@ global $post;
         jQuery(document).ready(function(){
             var group = jQuery("ul#todo-comments").sortable({
                 placeholder: '<li class="placeholder" />',
+                handle: 'div.icon-move',
                 onDrop: function (item, container, _super) {
                     var serialize_data = group.sortable("serialize").get();
                     console.log(serialize_data);
@@ -125,10 +127,19 @@ add_action('wp_enqueue_scripts', 'load_jquery_sortable');
 function load_jquery_sortable()
 {
     global $post;
+    if (!isset ($post)) return;
     if (has_shortcode($post->post_content, 'todo_comments') or is_single()) {
         wp_enqueue_style('todo', plugin_dir_url(__FILE__) . '/todo.css');
-        wp_enqueue_script('jquery-sortable', plugin_dir_url(__FILE__) . '/jquery-sortable-min.js', array('jquery'));
+        wp_enqueue_script('jquery-sortable-johny', plugin_dir_url(__FILE__) . '/jquery-sortable-min.js', array('jquery'));
+      // wp_enqueue_script('jquery-sortable', plugin_dir_url(__FILE__) . '/jquery-ui-1.11.2/jquery-ui.js', array('jquery'));
     }
+}
+
+add_action( 'wp_print_scripts', 'de_script', 100 );
+
+function de_script() {
+    wp_dequeue_script( 'jquery-ui-sortable' );
+    wp_deregister_script( 'jquery-ui-sortable' );
 }
 //добавляет чекбокс к форме комментария
 add_action('comment_form', 'cp_control_checkbox');
@@ -137,8 +148,7 @@ function cp_control_checkbox() {
     <p> <input type="hidden" name="check" value="no">
         <label for="check_for"><input type="checkbox" name="check" value="yes" id="check_for"> На контроль</label>
     </p>
-    <?php;
-
+    <?php
 }
 //добавляет мета поля к форме комментирования
 add_action('comment_post','cp_control_check');

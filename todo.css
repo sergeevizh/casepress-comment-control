@@ -57,3 +57,6 @@ ul.list-group li.placeholder:before {
 #todo-comments .panel{
   margin-bottom: 5px;
 }
+#todo-comments {
+  padding-left: 0px;
+}
