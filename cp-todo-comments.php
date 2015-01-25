@@ -95,7 +95,8 @@ function add_todo_cp(){
                 }
             });
             //удаление меты cp_control, запрос ajax
-            jQuery(".delete_li_item").click( function() {
+            jQuery(".delete_li_item").click( function(e) {
+                e.preventDefault();
                 comment_id = jQuery(this).attr("data-comment_id");
                 var data = {
                     comment_id: comment_id,
