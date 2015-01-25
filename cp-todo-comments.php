@@ -8,7 +8,7 @@ Author URI:            http://casepress.org
 Author email:          s@casepress.org
 GitHub Plugin URI:     https://github.com/systemo-biz/cp-todo-comments
 GitHub Branch:         master
-Version:               0.1
+Version:               0.1.1
 */
 
 add_shortcode('cp_todo_comments', 'add_todo_cp');
