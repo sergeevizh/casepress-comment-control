@@ -2,13 +2,13 @@
 /*
 Plugin Name:           CasePress. ToDo Comments
 Plugin URI:            http://casepress.org
-Description:           Плагин позволяет при добавлении коментария отметить его галочкой "На контроль". Отмеченные коментарии выводятся в виде списка шорткодом cp_todo_comments, порядок коментариев можно менять перетаскиванием элементов списка (порядок сохраняется). У каждого коментария есть кнопки "Редактировать", "Удалить".
+Description:           Плагин позволяет при добавлении комментария отметить его галочкой "На контроль". Отмеченные комментарии выводятся в виде списка шорткодом cp_todo_comments, порядок комментариев можно менять перетаскиванием элементов списка (порядок сохраняется). У каждого комментария есть кнопки "Редактировать", "Удалить".
 Author:                CasePress
 Author URI:            http://casepress.org
 Author email:          s@casepress.org
 GitHub Plugin URI:     https://github.com/systemo-biz/cp-todo-comments
 GitHub Branch:         master
-Version:               1.0
+Version:               1.0.1
 */
 
 add_shortcode('cp_todo_comments', 'add_todo_cp');
