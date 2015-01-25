@@ -6,7 +6,7 @@ Description:           Плагин позволяет при добавлени
 Author:                CasePress
 Author URI:            http://casepress.org
 Author email:          s@casepress.org
-GitHub Plugin URI:     https://github.com/systemo-biz/todo-comments-cp
+GitHub Plugin URI:     https://github.com/systemo-biz/cp-todo-comments
 GitHub Branch:         master
 Version:               0.1
 */
