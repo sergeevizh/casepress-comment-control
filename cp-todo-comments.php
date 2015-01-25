@@ -8,12 +8,12 @@ Author URI:            http://casepress.org
 Author email:          s@casepress.org
 GitHub Plugin URI:     https://github.com/systemo-biz/cp-todo-comments
 GitHub Branch:         master
-Version:               1.2
+Version:               1.0
 */
 
 add_shortcode('cp_todo_comments', 'add_todo_cp');
 function add_todo_cp(){
-global $post;
+    global $post;
     ob_start();
     $args = array(
         'post_id' => $post->ID,
@@ -54,28 +54,14 @@ global $post;
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                            <li role="presentation">
-                                                <a role="menuitem" tabindex="-1" href="#" data-comment_id="<?php echo $com_ID?>" class="delete_li_item">Удалить
-                                                  <!--  <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
-                                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                                    </button> -->
-                                                </a>
-                                            </li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-comment_id="<?php echo $com_ID?>" class="delete_li_item">Удалить</a></li>
                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo get_comment_link( $comment->comment_ID );?>">Перейти к комментарию </a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo get_edit_comment_link( $comment->comment_ID );?>">Редактировать</a></li>
+                                            <?php if( current_user_can('moderate_comments') ):?>
+                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo get_edit_comment_link( $comment->comment_ID );?>">Редактировать</a></li>
+                                            <?php endif;?>
                                         </ul>
                                     </div>
                                 </div>
-                               <!-- <div class="hide_hover">
-                                    <button type="button" data-comment_id="<?php echo $com_ID?>" class="delete_li_item btn btn-default btn-xs">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    </button>
-                                    <a class="comment-edit-link" href="<?php echo get_edit_comment_link( $comment->comment_ID );?>">
-                                        <button type="button" class="btn btn-default btn-xs">
-                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                        </button>
-                                    </a>
-                                </div>-->
                             </div><!--end col-md-2-->
                         </div><!--end row-->
                     </div><!--end panel-body-->
@@ -175,7 +161,7 @@ function cp_control_checkbox() {
         <input type="hidden" name="check" value="no">
         <label for="check_for"><input type="checkbox" name="check" value="yes" id="check_for"> На контроль</label>
     </p>
-    <?php
+<?php
 }
 
 //добавляет мета поля к форме комментирования
