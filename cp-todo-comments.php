@@ -32,7 +32,12 @@ function add_todo_cp(){
     <ul class="todo-comments" id="todo-comments">
         <?php foreach($comments as $comment){
             $cp_control_done = get_comment_meta($comment->comment_ID , "cp_control_done", true);
-            $com_ID = $comment->comment_ID;?>
+            $com_ID = $comment->comment_ID;
+            $link = get_comment_link( $comment->comment_ID );
+            $anchor = preg_split('/#/', $link);
+            $anchor = '#'.$anchor[1]; //anchor link to comment
+            ?>
+
             <li class="todo-comments-li" data-comment_id="<?php echo $com_ID?>" id="controlcommentid_<?php echo $com_ID?>">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -55,7 +60,7 @@ function add_todo_cp(){
                                         </button>
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-comment_id="<?php echo $com_ID?>" class="delete_li_item">Удалить</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo get_comment_link( $comment->comment_ID );?>">Перейти к комментарию </a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $anchor;?>">Перейти к комментарию </a></li>
                                             <?php if( current_user_can('moderate_comments') ):?>
                                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo get_edit_comment_link( $comment->comment_ID );?>">Редактировать</a></li>
                                             <?php endif;?>
@@ -86,7 +91,7 @@ function add_todo_cp(){
                     };
                     jQuery.post(ajaxurl, data, function(response) {
                         if (response.type == "success") {
-                            console.log (response)
+                           // console.log (response)
                         } else {
                             console.log("Ошибка")
                         }
@@ -137,7 +142,7 @@ function load_jquery_sortable()
 {
     global $post;
     if (!isset ($post)) return;
-    if (has_shortcode($post->post_content, 'cp_todo_comments') or is_single()) {
+    if (has_shortcode($post->post_content, 'cp_todo_comments') or is_single() ) {
         wp_enqueue_style('todo', plugin_dir_url(__FILE__) . '/todo.css');
         wp_enqueue_script('jquery-sortable-johny', plugin_dir_url(__FILE__) . '/jquery-sortable-min.js', array('jquery'));
     }
@@ -148,7 +153,7 @@ add_action( 'wp_print_scripts', 'de_script', 100 );
 function de_script() {
     global $post;
     if (!isset ($post)) return;
-    if (has_shortcode($post->post_content, 'cp_todo_comments')){
+    if (has_shortcode($post->post_content, 'cp_todo_comments') or is_single() ){
         wp_dequeue_script( 'jquery-ui-sortable' );
         wp_deregister_script( 'jquery-ui-sortable' );
     }
