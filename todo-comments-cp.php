@@ -78,13 +78,13 @@ function add_todo_cp(){
     </ul>
     <script>
         var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-        jQuery(document).ready(function($){
+        jQuery(document).ready(function(){
             //отправка ajax`ом порядка вывода коментов
-            var group = jQuery("ul#todo-comments").sortable({
+            var group = jQuery("ul#todo-comments").sortable_a({
                 placeholder: '<li class="placeholder" />',
                 handle: 'div.icon-move',                                //дергалка за которую перетаскивать
                 onDrop: function (item, container, _super) {
-                    var serialize_data = group.sortable("serialize").get();
+                    var serialize_data = group.sortable_a("serialize").get();
                     var data = {
                         serialize_data: serialize_data,
                         action: 'cp_control_order_change'
@@ -149,13 +149,15 @@ function load_jquery_sortable()
 }
 
 //отключает jquery ui sortable, у плагина jquery-sortable by johny конфликт с ним
-add_action( 'wp_print_scripts', 'de_script', 100 );
+add_action( 'wp_print_scripts', 'de_script', 1000 );
 function de_script() {
     global $post;
     if (!isset ($post)) return;
     if (has_shortcode($post->post_content, 'cp_todo_comments') or is_single() ){
         wp_dequeue_script( 'jquery-ui-sortable' );
         wp_deregister_script( 'jquery-ui-sortable' );
+        wp_dequeue_script( 'jquery-ui-droppable' );
+        wp_deregister_script( 'jquery-ui-droppable' );
     }
 }
 
